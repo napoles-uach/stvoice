@@ -1,5 +1,5 @@
 import streamlit as st
-from my_component import my_component
+from streamlit_voice import voice
 
 # Título de la aplicación
 st.title("Aplicación de Transcripción de Voz")
@@ -10,7 +10,7 @@ st.write("""
 """)
 
 # Insertar el componente personalizado
-transcription = my_component(name="Transcriptor de Voz")
+transcription = voice(name="Transcriptor de Voz")
 
 # Mostrar la transcripción
 if transcription:
