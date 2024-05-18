@@ -52,4 +52,4 @@ for event in replicate.stream(
 ):
     st.text(event)#, end="")
     ans.append(str(event))
-st.write(ans)
+st.write(' '.join(ans))
