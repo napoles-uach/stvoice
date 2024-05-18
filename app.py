@@ -31,6 +31,7 @@ import streamlit as st
 from streamlit_mic_recorder import mic_recorder, speech_to_text
 from streamlit_avatar import avatar
 import replicate
+import json
 
 lang = "en-EN"
 state = st.session_state
@@ -64,7 +65,9 @@ if text:
             "snowflake/snowflake-arctic-instruct",
             input=input
         ):
-            llm_response += event.get('text', '')
+            # Procesar el evento y extraer el texto
+            event_data = json.loads(event.data)
+            llm_response += event_data.get('text', '')
     except Exception as e:
         st.error(f"Error interacting with LLM: {e}")
     
@@ -81,3 +84,4 @@ st.text(state.llm_response)
 # Mostrar el avatar diciendo la respuesta del LLM
 if state.llm_response:
     avatar(state.llm_response, lang=lang)
+
