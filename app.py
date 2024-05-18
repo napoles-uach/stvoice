@@ -1,78 +1,26 @@
+
 import streamlit as st
-import streamlit.components.v1 as components
+from streamlit_mic_recorder import mic_recorder, speech_to_text
 
-# Título de la aplicación
-st.title("Aplicación de Transcripción de Voz")
+state = st.session_state
 
-# Instrucciones
-st.write("""
-    Presiona el botón de abajo para activar el micrófono. Habla y tu voz será convertida a texto.
-""")
+if 'text_received' not in state:
+    state.text_received = []
 
-# Definir el contenido HTML con JavaScript para la transcripción de voz
-_COMPONENT_HTML = """
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Transcripción de Voz</title>
-</head>
-<body>
-    <h2>Presiona el botón y habla:</h2>
-    <button onclick="startDictation()">Iniciar</button>
-    <p id="result"></p>
-    <script>
-        function startDictation() {
-            if (window.hasOwnProperty('webkitSpeechRecognition')) {
-                var recognition = new webkitSpeechRecognition();
+c1, c2 = st.columns(2)
+with c1:
+    st.write("Convert speech to text:")
+with c2:
+    text = speech_to_text(language='en', use_container_width=True, just_once=True, key='STT')
 
-                recognition.continuous = false;
-                recognition.interimResults = false;
+if text:
+    state.text_received.append(text)
 
-                recognition.lang = "es-ES";
-                recognition.start();
+for text in state.text_received:
+    st.text(text)
 
-                recognition.onresult = function(e) {
-                    document.getElementById('result').innerHTML = e.results[0][0].transcript;
-                    sendToStreamlit(e.results[0][0].transcript);
-                    recognition.stop();
-                };
+st.write("Record your voice, and play the recorded audio:")
+audio = mic_recorder(start_prompt="⏺️", stop_prompt="⏹️", key='recorder')
 
-                recognition.onerror = function(e) {
-                    recognition.stop();
-                }
-            }
-        }
-
-        function sendToStreamlit(text) {
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = 'data:text/plain,' + encodeURIComponent(text);
-            document.body.appendChild(iframe);
-
-            iframe.onload = function() {
-                setTimeout(function() {
-                    iframe.remove();
-                }, 1000);
-            };
-        }
-    </script>
-</body>
-</html>
-"""
-
-# Insertar el contenido HTML en la aplicación de Streamlit
-components.html(_COMPONENT_HTML, height=300)
-
-# Capturar la transcripción desde los parámetros de URL
-transcription = st.experimental_get_query_params().get("text", [""])[0]
-
-# Mostrar la transcripción si está disponible
-if transcription:
-    st.write("Texto transcrito:")
-    st.write(transcription)
-    # Aquí puedes añadir el procesamiento adicional del texto
-    processed_text = transcription.upper()  # Ejemplo de procesamiento: convertir a mayúsculas
-    st.write("Texto procesado:")
-    st.write(processed_text)
-
+if audio:
+    st.audio(audio['bytes'])
