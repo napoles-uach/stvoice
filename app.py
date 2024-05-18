@@ -39,16 +39,13 @@ input = {
     "prompt": "write a joke",
     "temperature": 0.2
 }
-prediction = replicate.models.predictions.create(
-  "snowflake/snowflake-arctic-instruct",
-  input=input
-)
 
-#output=replicate.stream(
-#    "snowflake/snowflake-arctic-instruct",
-#    input=input
-#)
-st.write(prediction)
+
+output=replicate.stream(
+    "snowflake/snowflake-arctic-instruct",
+    input=input
+)
+st.write(output)
 #for event in replicate.stream(
 #    "snowflake/snowflake-arctic-instruct",
 #    input=input
