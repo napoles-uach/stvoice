@@ -1,5 +1,5 @@
 import streamlit as st
-from streamlit_voice import my_component
+from stvoice import my_component
 
 # Título de la aplicación
 st.title("Aplicación de Transcripción de Voz")
