@@ -1,101 +1,71 @@
 import streamlit as st
-from streamlit_webrtc import webrtc_streamer, WebRtcMode, ClientSettings
-import av
-import numpy as np
-import pydub
-import speech_recognition as sr
-import tempfile
-import os
-from collections import deque
-import threading
-from typing import List
-from twilio.rest import Client
+import streamlit.components.v1 as components
 
-def get_ice_servers():
-    try:
-        account_sid = st.secrets["twilio"]["account_sid"]
-        auth_token = st.secrets["twilio"]["auth_token"]
-    except KeyError:
-        st.warning("Twilio credentials are not set. Using a free STUN server from Google.")
-        return [{"urls": ["stun:stun.l.google.com:19302"]}]
-
-    client = Client(account_sid, auth_token)
-    token = client.tokens.create()
-    return token.ice_servers
-
+# Título de la aplicación
 st.title("Aplicación de Transcripción de Voz")
 
-def transcribe_audio(file_path):
-    recognizer = sr.Recognizer()
-    with sr.AudioFile(file_path) as source:
-        audio_data = recognizer.record(source)
-        text = recognizer.recognize_google(audio_data)
-        return text
+# Instrucciones
+st.write("""
+    Presiona el botón de abajo para activar el micrófono. Habla y tu voz será convertida a texto.
+""")
 
-frames_deque_lock = threading.Lock()
-frames_deque: deque = deque([])
+# Insertar el componente personalizado
+components.html("""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transcripción de Voz</title>
+</head>
+<body>
+    <h2>Presiona el botón y habla:</h2>
+    <button onclick="startDictation()">Iniciar</button>
+    <p id="result"></p>
+    <script>
+        function startDictation() {
+            if (window.hasOwnProperty('webkitSpeechRecognition')) {
+                var recognition = new webkitSpeechRecognition();
 
-def queued_audio_frames_callback(frames: List[av.AudioFrame]) -> List[av.AudioFrame]:
-    with frames_deque_lock:
-        frames_deque.extend(frames)
+                recognition.continuous = false;
+                recognition.interimResults = false;
 
-    new_frames = []
-    for frame in frames:
-        input_array = frame.to_ndarray()
-        new_frame = av.AudioFrame.from_ndarray(
-            np.zeros(input_array.shape, dtype=input_array.dtype),
-            layout=frame.layout.name,
-        )
-        new_frame.sample_rate = frame.sample_rate
-        new_frames.append(new_frame)
+                recognition.lang = "en-US";
+                recognition.start();
 
-    return new_frames
+                recognition.onresult = function(e) {
+                    document.getElementById('result').innerHTML = e.results[0][0].transcript;
+                    sendToStreamlit(e.results[0][0].transcript);
+                    recognition.stop();
+                };
 
-# Configuración del receptor de audio
-try:
-    webrtc_ctx = webrtc_streamer(
-        key="example",
-        mode=WebRtcMode.SENDRECV,
-        queued_audio_frames_callback=queued_audio_frames_callback,
-        rtc_configuration={"iceServers": get_ice_servers()},
-        media_stream_constraints={"audio": True, "video": False},
-    )
+                recognition.onerror = function(e) {
+                    recognition.stop();
+                }
+            }
+        }
 
-    status_indicator = st.empty()
+        function sendToStreamlit(text) {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = 'data:text/plain,' + encodeURIComponent(text);
+            document.body.appendChild(iframe);
 
-    if not webrtc_ctx.state.playing:
-        st.write("Inicie la grabación para empezar.")
-    else:
-        status_indicator.write("Grabando audio...")
+            iframe.onload = function() {
+                setTimeout(function() {
+                    iframe.remove();
+                }, 1000);
+            };
+        }
+    </script>
+</body>
+</html>
+""", height=300)
 
-        if len(frames_deque) > 0:
-            audio_frames = []
-            with frames_deque_lock:
-                while len(frames_deque) > 0:
-                    frame = frames_deque.popleft()
-                    audio_frames.append(frame)
+# Capturar el resultado de JavaScript y mostrarlo en Streamlit
+if "transcript" not in st.session_state:
+    st.session_state["transcript"] = ""
 
-            sound_chunk = pydub.AudioSegment.empty()
-            for audio_frame in audio_frames:
-                sound = pydub.AudioSegment(
-                    data=audio_frame.to_ndarray().tobytes(),
-                    sample_width=audio_frame.format.bytes,
-                    frame_rate=audio_frame.sample_rate,
-                    channels=len(audio_frame.layout.channels),
-                )
-                sound_chunk += sound
+if st.button("Actualizar Transcripción"):
+    st.session_state["transcript"] = st.experimental_get_query_params().get("text", [""])[0]
 
-            if len(sound_chunk) > 0:
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
-                    sound_chunk.export(f.name, format="wav")
-                    audio_file = f.name
-
-                st.write("Transcribiendo audio...")
-                transcription = transcribe_audio(audio_file)
-                st.write("Texto transcrito:")
-                st.write(transcription)
-
-                # Eliminar archivos temporales
-                os.remove(audio_file)
-except Exception as e:
-    st.error(f"Error en la configuración de WebRTC: {str(e)}")
+st.write("Texto transcrito:")
+st.write(st.session_state["transcript"])
