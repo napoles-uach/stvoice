@@ -45,7 +45,7 @@ output=replicate.stream(
     "snowflake/snowflake-arctic-instruct",
     input=input
 )
-st.text(output)
+st.markdown(output)
 #for event in replicate.stream(
 #    "snowflake/snowflake-arctic-instruct",
 #    input=input
