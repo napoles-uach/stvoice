@@ -40,9 +40,14 @@ input = {
     "temperature": 0.2
 }
 
-for event in replicate.stream(
+output=replicate.stream(
     "snowflake/snowflake-arctic-instruct",
     input=input
-):
-    st.text(event)#, end="")
-#=> "Fizz Buzz is a common programming problem that involves ...
+)
+st.write(output)
+#for event in replicate.stream(
+#    "snowflake/snowflake-arctic-instruct",
+#    input=input
+#):
+#    st.text(event)#, end="")
+##=> "Fizz Buzz is a common programming problem that involves ...
