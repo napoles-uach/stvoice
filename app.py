@@ -27,29 +27,21 @@
 #    st.text(text)
 
 
-import streamlit as st
-from streamlit_mic_recorder import speech_to_text
-from streamlit_avatar import avatar
 import replicate
 import json
 
-import replicate
+def stream_llm_responses(prompt_str, temperature=0.7, top_p=0.9):
+    responses = []
+    for event in replicate.stream("snowflake/snowflake-arctic-instruct",
+                                  input={"prompt": prompt_str,
+                                         "prompt_template": r"{prompt}",
+                                         "temperature": temperature,
+                                         "top_p": top_p,
+                                         }):
+        responses.append(str(event))
+    return ' '.join(responses)
 
-input = {
-    "prompt": "write a joke",
-    "temperature": 0.2
-}
-
-
-output=replicate.stream(
-    "snowflake/snowflake-arctic-instruct",
-    input=input
-)
-ans=[]
-for event in replicate.stream(
-    "snowflake/snowflake-arctic-instruct",
-    input=input
-):
-    st.text(event)#, end="")
-    ans.append(str(event))
-st.write(' '.join(ans))
+# Uso de la función
+prompt = "Write a joke"
+response = stream_llm_responses(prompt)
+st.write(response)
