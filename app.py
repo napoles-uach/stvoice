@@ -44,5 +44,5 @@ for event in replicate.stream(
     "snowflake/snowflake-arctic-instruct",
     input=input
 ):
-    st.code(event)#, end="")
+    st.text(event)#, end="")
 #=> "Fizz Buzz is a common programming problem that involves ...
