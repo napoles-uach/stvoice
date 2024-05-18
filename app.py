@@ -10,7 +10,10 @@ st.write("""
 """)
 
 # Insertar el componente personalizado
-transcription = voice(name="Transcriptor de Voz")
+voice()
+
+# Capturar la transcripción desde los parámetros de URL
+transcription = st.experimental_get_query_params().get("text", [""])[0]
 
 # Mostrar la transcripción si está disponible
 if transcription:
