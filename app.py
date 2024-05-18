@@ -8,6 +8,8 @@ import tempfile
 import os
 from collections import deque
 import threading
+from typing import List
+from twilio.rest import Client
 
 def get_ice_servers():
     """Use Twilio's TURN server because Streamlit Community Cloud has changed
@@ -15,8 +17,8 @@ def get_ice_servers():
     """
     # Ref: https://www.twilio.com/docs/stun-turn/api
     try:
-        account_sid = os.environ["TWILIO_ACCOUNT_SID"]
-        auth_token = os.environ["TWILIO_AUTH_TOKEN"]
+        account_sid = st.secrets["twilio"]["account_sid"]
+        auth_token = st.secrets["twilio"]["auth_token"]
     except KeyError:
         return [{"urls": ["stun:stun.l.google.com:19302"]}]
 
@@ -36,7 +38,7 @@ def transcribe_audio(file_path):
 frames_deque_lock = threading.Lock()
 frames_deque: deque = deque([])
 
-def queued_audio_frames_callback(frames: List[av.AudioFrame]) -> av.AudioFrame:
+def queued_audio_frames_callback(frames: List[av.AudioFrame]) -> List[av.AudioFrame]:
     with frames_deque_lock:
         frames_deque.extend(frames)
 
