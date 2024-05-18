@@ -26,6 +26,9 @@
 #for text in state.text_received:
 #    st.text(text)
 
+
+from streamlit_mic_recorder import mic_recorder, speech_to_text
+from streamlit_avatar import avatar
 import streamlit as st
 import replicate
 import json
@@ -44,4 +47,5 @@ def stream_llm_responses(prompt_str, temperature=0.7, top_p=0.9):
 # Uso de la función
 prompt = "Write a joke"
 response = stream_llm_responses(prompt)
+avatar(response)
 st.write(response)
