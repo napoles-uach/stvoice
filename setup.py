@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="streamlit_voice",
+    name="stvoice",
     version="0.1.0",
     author="Jose Manuel Napoles",
     description="A Streamlit component for animated Avatars",
