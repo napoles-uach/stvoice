@@ -36,7 +36,7 @@ import json
 import replicate
 
 input = {
-    "prompt": "Write fizz buzz in SQL",
+    "prompt": "write a joke",
     "temperature": 0.2
 }
 
