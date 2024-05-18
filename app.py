@@ -12,7 +12,7 @@ st.write("""
 # Insertar el componente personalizado
 transcription = voice(name="Transcriptor de Voz")
 
-# Mostrar la transcripción
+# Mostrar la transcripción si está disponible
 if transcription:
     st.write("Texto transcrito:")
     st.write(transcription)
