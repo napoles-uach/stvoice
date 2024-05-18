@@ -45,10 +45,12 @@ output=replicate.stream(
     "snowflake/snowflake-arctic-instruct",
     input=input
 )
-st.markdown(output)
-#for event in replicate.stream(
-#    "snowflake/snowflake-arctic-instruct",
-#    input=input
-#):
-#    st.text(event)#, end="")
+ans=[]
+for event in replicate.stream(
+    "snowflake/snowflake-arctic-instruct",
+    input=input
+):
+    st.text(event)#, end="")
+    ans.append(str(event))
+st.write(ans)
 ##=> "Fizz Buzz is a common programming problem that involves ...
