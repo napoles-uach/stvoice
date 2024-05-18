@@ -52,47 +52,50 @@ def queued_audio_frames_callback(frames: List[av.AudioFrame]) -> List[av.AudioFr
     return new_frames
 
 # Configuración del receptor de audio
-webrtc_ctx = webrtc_streamer(
-    key="example",
-    mode=WebRtcMode.SENDRECV,
-    queued_audio_frames_callback=queued_audio_frames_callback,
-    rtc_configuration={"iceServers": get_ice_servers()},
-    media_stream_constraints={"audio": True, "video": False},
-)
+try:
+    webrtc_ctx = webrtc_streamer(
+        key="example",
+        mode=WebRtcMode.SENDRECV,
+        queued_audio_frames_callback=queued_audio_frames_callback,
+        rtc_configuration={"iceServers": get_ice_servers()},
+        media_stream_constraints={"audio": True, "video": False},
+    )
 
-status_indicator = st.empty()
+    status_indicator = st.empty()
 
-if not webrtc_ctx.state.playing:
-    st.write("Inicie la grabación para empezar.")
-else:
-    status_indicator.write("Grabando audio...")
+    if not webrtc_ctx.state.playing:
+        st.write("Inicie la grabación para empezar.")
+    else:
+        status_indicator.write("Grabando audio...")
 
-    if len(frames_deque) > 0:
-        audio_frames = []
-        with frames_deque_lock:
-            while len(frames_deque) > 0:
-                frame = frames_deque.popleft()
-                audio_frames.append(frame)
+        if len(frames_deque) > 0:
+            audio_frames = []
+            with frames_deque_lock:
+                while len(frames_deque) > 0:
+                    frame = frames_deque.popleft()
+                    audio_frames.append(frame)
 
-        sound_chunk = pydub.AudioSegment.empty()
-        for audio_frame in audio_frames:
-            sound = pydub.AudioSegment(
-                data=audio_frame.to_ndarray().tobytes(),
-                sample_width=audio_frame.format.bytes,
-                frame_rate=audio_frame.sample_rate,
-                channels=len(audio_frame.layout.channels),
-            )
-            sound_chunk += sound
+            sound_chunk = pydub.AudioSegment.empty()
+            for audio_frame in audio_frames:
+                sound = pydub.AudioSegment(
+                    data=audio_frame.to_ndarray().tobytes(),
+                    sample_width=audio_frame.format.bytes,
+                    frame_rate=audio_frame.sample_rate,
+                    channels=len(audio_frame.layout.channels),
+                )
+                sound_chunk += sound
 
-        if len(sound_chunk) > 0:
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
-                sound_chunk.export(f.name, format="wav")
-                audio_file = f.name
+            if len(sound_chunk) > 0:
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as f:
+                    sound_chunk.export(f.name, format="wav")
+                    audio_file = f.name
 
-            st.write("Transcribiendo audio...")
-            transcription = transcribe_audio(audio_file)
-            st.write("Texto transcrito:")
-            st.write(transcription)
+                st.write("Transcribiendo audio...")
+                transcription = transcribe_audio(audio_file)
+                st.write("Texto transcrito:")
+                st.write(transcription)
 
-            # Eliminar archivos temporales
-            os.remove(audio_file)
+                # Eliminar archivos temporales
+                os.remove(audio_file)
+except Exception as e:
+    st.error(f"Error en la configuración de WebRTC: {str(e)}")
