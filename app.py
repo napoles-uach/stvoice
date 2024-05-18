@@ -1,6 +1,11 @@
 
 import streamlit as st
 from streamlit_mic_recorder import mic_recorder, speech_to_text
+from streamlit_avatar import avatar
+
+lang = "en-EN"
+
+
 
 state = st.session_state
 
@@ -15,12 +20,14 @@ with c2:
 
 if text:
     state.text_received.append(text)
+    #text = st.chat_input("Say something",key=0)
+    avatar(text)
 
 for text in state.text_received:
     st.text(text)
 
-st.write("Record your voice, and play the recorded audio:")
-audio = mic_recorder(start_prompt="⏺️", stop_prompt="⏹️", key='recorder')
+#st.write("Record your voice, and play the recorded audio:")
+#audio = mic_recorder(start_prompt="⏺️", stop_prompt="⏹️", key='recorder')
 
-if audio:
-    st.audio(audio['bytes'])
+#if audio:
+#    st.audio(audio['bytes'])
