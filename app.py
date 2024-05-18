@@ -38,18 +38,22 @@ def audio_receiver_factory():
     return audio_receiver
 
 # Configuración del receptor de audio
-webrtc_ctx = webrtc_streamer(
-    key="example",
-    mode=WebRtcMode.SENDRECV,
-    client_settings=ClientSettings(
-        rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
-        media_stream_constraints={"audio": True, "video": False},
-    ),
-    audio_receiver_factory=audio_receiver_factory,
-    async_processing=True,
-)
+try:
+    webrtc_ctx = webrtc_streamer(
+        key="example",
+        mode=WebRtcMode.SENDRECV,
+        client_settings=ClientSettings(
+            rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
+            media_stream_constraints={"audio": True, "video": False},
+        ),
+        audio_receiver_factory=audio_receiver_factory,
+        async_processing=True,
+    )
 
-# Mostrar la transcripción si está disponible
-if 'transcription' in st.session_state:
-    st.write("Texto transcrito:")
-    st.write(st.session_state.transcription)
+    # Mostrar la transcripción si está disponible
+    if 'transcription' in st.session_state:
+        st.write("Texto transcrito:")
+        st.write(st.session_state.transcription)
+
+except TypeError as e:
+    st.error(f"Error en la aplicación: {str(e)}")
