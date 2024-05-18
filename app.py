@@ -12,14 +12,11 @@ from typing import List
 from twilio.rest import Client
 
 def get_ice_servers():
-    """Use Twilio's TURN server because Streamlit Community Cloud has changed
-    its infrastructure and WebRTC connection cannot be established without TURN server now.
-    """
-    # Ref: https://www.twilio.com/docs/stun-turn/api
     try:
         account_sid = st.secrets["twilio"]["account_sid"]
         auth_token = st.secrets["twilio"]["auth_token"]
     except KeyError:
+        st.warning("Twilio credentials are not set. Using a free STUN server from Google.")
         return [{"urls": ["stun:stun.l.google.com:19302"]}]
 
     client = Client(account_sid, auth_token)
@@ -42,7 +39,6 @@ def queued_audio_frames_callback(frames: List[av.AudioFrame]) -> List[av.AudioFr
     with frames_deque_lock:
         frames_deque.extend(frames)
 
-    # Return empty frames to be silent.
     new_frames = []
     for frame in frames:
         input_array = frame.to_ndarray()
