@@ -46,6 +46,8 @@ def stream_llm_responses(prompt_str, temperature=0.7, top_p=0.9):
 
 # Uso de la función
 prompt = "Write a joke"
-response = stream_llm_responses(prompt)
-avatar(response)
-st.write(response)
+prompt = speech_to_text(language='en', use_container_width=True, just_once=True, key='STT')
+if prompt:
+    response = stream_llm_responses(prompt)
+    avatar(response)
+    st.write(response)
