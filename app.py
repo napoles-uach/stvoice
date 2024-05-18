@@ -44,7 +44,7 @@ output=replicate.stream(
     "snowflake/snowflake-arctic-instruct",
     input=input
 )
-st.write(output)
+st.write(str(output))
 #for event in replicate.stream(
 #    "snowflake/snowflake-arctic-instruct",
 #    input=input
