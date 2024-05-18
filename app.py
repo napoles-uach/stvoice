@@ -59,11 +59,14 @@ if text:
     }
     
     llm_response = ""
-    for event in replicate.stream(
-        "snowflake/snowflake-arctic-instruct",
-        input=input
-    ):
-        llm_response += event
+    try:
+        for event in replicate.stream(
+            "snowflake/snowflake-arctic-instruct",
+            input=input
+        ):
+            llm_response += event.get('text', '')
+    except Exception as e:
+        st.error(f"Error interacting with LLM: {e}")
     
     state.llm_response = llm_response
 
@@ -78,4 +81,3 @@ st.text(state.llm_response)
 # Mostrar el avatar diciendo la respuesta del LLM
 if state.llm_response:
     avatar(state.llm_response, lang=lang)
-
