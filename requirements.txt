@@ -2,5 +2,5 @@ twilio
 pydub 
 speechrecognition
 streamlit-webrtc 
-git+https://github.com/napoles-uach/stvoice.git@main
+git+https://github.com/napoles-uach/streamlit_voice.git@main
 
