@@ -41,7 +41,7 @@ def avatar(text='', lang='en-US'):
                     height: 300px;
                     background-size: cover;
                     background-image: url('https://raw.githubusercontent.com/napoles-uach/streamlit_avatar/main/artic_1.png'); /* Imagen de fondo predeterminada */
-                    animation: waitingAnimation 1s steps(2, end) infinite; /* Duración ajustada */
+                    animation: waitingAnimation 3s steps(2, end) infinite; /* Duración ajustada */
                     z-index: 1;
                 }}
                 @keyframes waitingAnimation {{
@@ -84,11 +84,11 @@ def avatar(text='', lang='en-US'):
                     var utterance = new SpeechSynthesisUtterance(texto);
                     utterance.lang = "{lang}"; // Configurar el idioma deseado
                     utterance.onstart = function(event) {{
-                        var duration = Math.min(utterance.text.length / 50, 5);  // Duración de la animación más rápida
+                        var duration = Math.max(texto.length / 15, 2);  // Duración basada en la longitud del texto
                         setAnimation('speakAnimation', duration, 10);
                     }};
                     utterance.onend = function(event) {{
-                        setTimeout(() => {{ setAnimation('waitingAnimation', 1, 2); }}, 500);  // Transición más rápida a la animación de espera
+                        setTimeout(() => {{ setAnimation('waitingAnimation', 3, 2); }}, 500);  // Transición más lenta a la animación de espera
                     }};
                     speechSynthesis.speak(utterance);
 
@@ -194,13 +194,16 @@ def generate_arctic_response():
         st.button('Clear chat history', on_click=clear_chat_history, key="clear_chat_history")
         st.stop()
 
+    response = ""
     for event in replicate.stream("snowflake/snowflake-arctic-instruct",
-                           input={"prompt": prompt_str,
-                                  "prompt_template": r"{prompt}",
-                                  "temperature": temperature,
-                                  "top_p": top_p,
-                                  }):
+                                  input={"prompt": prompt_str,
+                                         "prompt_template": r"{prompt}",
+                                         "temperature": temperature,
+                                         "top_p": top_p,
+                                         }):
+        response += str(event)
         yield str(event)
+    return response
 
 # User-provided prompt via chat input or voice
 st.header("Chat with Snowflake Arctic")
@@ -216,8 +219,8 @@ if text_prompt or st.session_state.get("voice_prompt"):
     if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
             response_stream = generate_arctic_response()
-            response = ''.join(response_stream)
-            avatar(response)
-            st.write(response)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+            full_response = ''.join(response_stream)
+            avatar(full_response)
+            st.write(full_response)
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
 
