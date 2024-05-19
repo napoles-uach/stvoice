@@ -17,7 +17,7 @@ def avatar(text='', lang='en-US'):
             100% { background-image: url('https://raw.githubusercontent.com/napoles-uach/streamlit_avatar/main/artic_closed_eyes.png'); }
         """
 
-        keyframes_speaking = "".join([f"{i*10}% {{background-image: url('https://raw.githubusercontent.com/napoles-uach/streamlit_avatar/main/artic_{i}.png');}}\n" for i in range(10)])
+        keyframes_speaking = "".join([f"{i*10}% {{background-image: url('https://raw.githubusercontent.com/napoles-uach/streamlit_avatar/main/artic_{i%9 + 1}.png');}}\n" for i in range(10)])
 
         # Construcción del HTML para el avatar animado.
         html_str = f"""
@@ -83,7 +83,8 @@ def avatar(text='', lang='en-US'):
                     var utterance = new SpeechSynthesisUtterance(texto);
                     utterance.lang = "{lang}"; // Configurar el idioma deseado
                     utterance.onstart = function(event) {{
-                        setAnimation('speakAnimation', 2, 10);
+                        var duration = Math.min(utterance.text.length / 10, 10);  // Duración de la animación basada en la longitud del texto
+                        setAnimation('speakAnimation', duration, 10);
                     }};
                     utterance.onend = function(event) {{
                         setTimeout(() => {{ setAnimation('waitingAnimation', 2, 2); }}, 500);
