@@ -33,7 +33,7 @@ if "messages" not in st.session_state.keys():
 
 # Display or clear chat messages
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):#, avatar=icons.get(message["role"], None)):
+    with st.chat_message(message["role"], avatar=icons.get(message["role"], None)):
         st.write(message["content"])
 
 def clear_chat_history():
@@ -95,7 +95,7 @@ if prompt:
         st.write(prompt)
 
     if st.session_state.messages[-1]["role"] != "assistant":
-        with st.chat_message("assistant"):#, avatar="./Snowflake_Logomark_blue.svg"):
+        with st.chat_message("assistant", avatar="./Snowflake_Logomark_blue.svg"):
             response = generate_arctic_response()
             avatar(response)
             st.write(response)
