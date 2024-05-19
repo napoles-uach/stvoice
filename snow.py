@@ -41,7 +41,7 @@ def avatar(text='', lang='en-US'):
                     height: 300px;
                     background-size: cover;
                     background-image: url('https://raw.githubusercontent.com/napoles-uach/streamlit_avatar/main/artic_1.png'); /* Imagen de fondo predeterminada */
-                    animation: waitingAnimation 3s steps(2, end) infinite; /* Duración ajustada */
+                    animation: waitingAnimation 1s steps(2, end) infinite; /* Duración ajustada */
                     z-index: 1;
                 }}
                 @keyframes waitingAnimation {{
@@ -84,11 +84,11 @@ def avatar(text='', lang='en-US'):
                     var utterance = new SpeechSynthesisUtterance(texto);
                     utterance.lang = "{lang}"; // Configurar el idioma deseado
                     utterance.onstart = function(event) {{
-                        var duration = Math.min(utterance.text.length / 10, 5);  // Duración de la animación más rápida
+                        var duration = Math.min(utterance.text.length / 20, 5);  // Duración de la animación más rápida
                         setAnimation('speakAnimation', duration, 10);
                     }};
                     utterance.onend = function(event) {{
-                        setTimeout(() => {{ setAnimation('waitingAnimation', 3, 2); }}, 500);  // Transición más lenta a la animación de espera
+                        setTimeout(() => {{ setAnimation('waitingAnimation', 1, 2); }}, 500);  // Transición más rápida a la animación de espera
                     }};
                     speechSynthesis.speak(utterance);
 
@@ -220,3 +220,4 @@ if text_prompt or st.session_state.get("voice_prompt"):
             avatar(response)
             st.write(response)
         st.session_state.messages.append({"role": "assistant", "content": response})
+
