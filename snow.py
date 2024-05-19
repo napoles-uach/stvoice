@@ -40,6 +40,7 @@ def avatar(text='', lang='en-US'):
                     width: 300px;
                     height: 300px;
                     background-size: cover;
+                    background-image: url('https://raw.githubusercontent.com/napoles-uach/streamlit_avatar/main/artic_1.png'); /* Imagen de fondo predeterminada */
                     animation: waitingAnimation 2s steps(2, end) infinite;
                     z-index: 1;
                 }}
@@ -83,7 +84,7 @@ def avatar(text='', lang='en-US'):
                     var utterance = new SpeechSynthesisUtterance(texto);
                     utterance.lang = "{lang}"; // Configurar el idioma deseado
                     utterance.onstart = function(event) {{
-                        var duration = Math.min(utterance.text.length / 10, 10);  // Duración de la animación basada en la longitud del texto
+                        var duration = Math.min(utterance.text.length / 10, 5);  // Duración de la animación basada en la longitud del texto
                         setAnimation('speakAnimation', duration, 10);
                     }};
                     utterance.onend = function(event) {{
