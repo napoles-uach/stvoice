@@ -93,7 +93,7 @@ if prompt := st.chat_input(disabled=not replicate_api):
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):#, avatar="./Snowflake_Logomark_blue.svg"):
         response = generate_arctic_response()
-        full_response = st.write_stream(response)
+        #full_response = st.write_stream(response)
         st.write('1: ')
         #avatar(response)
     message = {"role": "assistant", "content": full_response}
