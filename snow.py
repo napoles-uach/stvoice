@@ -91,10 +91,7 @@ st.header("Chat with Snowflake Arctic")
 text_prompt = st.chat_input(disabled=not replicate_api, key="text_input")
 
 if text_prompt or st.session_state.get("voice_prompt"):
-    if text_prompt:
-        user_prompt = text_prompt
-    else:
-        user_prompt = st.session_state.pop("voice_prompt")
+    user_prompt = text_prompt if text_prompt else st.session_state.pop("voice_prompt", "")
         
     st.session_state.messages.append({"role": "user", "content": user_prompt})
     with st.chat_message("user", avatar="⛷️"):
@@ -107,4 +104,3 @@ if text_prompt or st.session_state.get("voice_prompt"):
             avatar(response)
             st.write(response)
         st.session_state.messages.append({"role": "assistant", "content": response})
-
