@@ -26,6 +26,12 @@ with st.sidebar:
     st.subheader("Adjust model parameters")
     temperature = st.slider('temperature', min_value=0.01, max_value=5.0, value=0.3, step=0.01)
     top_p = st.slider('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
+    
+    st.subheader("Voice Input")
+    mic = mic_recorder(key="mic_input")
+    voice_prompt = speech_to_text(language='en', use_container_width=True, just_once=True, key='STT')
+    if voice_prompt:
+        st.session_state.voice_prompt = voice_prompt
 
 # Store LLM-generated responses
 if "messages" not in st.session_state.keys():
@@ -33,7 +39,7 @@ if "messages" not in st.session_state.keys():
 
 # Display or clear chat messages
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):#, avatar=icons.get(message["role"], None)):
+    with st.chat_message(message["role"]):
         st.write(message["content"])
 
 def clear_chat_history():
@@ -82,23 +88,23 @@ def generate_arctic_response():
 
 # User-provided prompt via chat input or voice
 st.header("Chat with Snowflake Arctic")
-prompt = st.chat_input(disabled=not replicate_api, key="text_input")
-if not prompt:
-    st.write("Or use voice input:")
-    mic = mic_recorder(key="mic_input")
-    prompt = speech_to_text(language='en', use_container_width=True, just_once=True, key='STT')
+text_prompt = st.chat_input(disabled=not replicate_api, key="text_input")
 
-if prompt:
-    st.session_state.messages.append({"role": "user", "content": prompt})
+if text_prompt or st.session_state.get("voice_prompt"):
+    if text_prompt:
+        user_prompt = text_prompt
+    else:
+        user_prompt = st.session_state.pop("voice_prompt")
+        
+    st.session_state.messages.append({"role": "user", "content": user_prompt})
     with st.chat_message("user", avatar="⛷️"):
-        st.write(prompt)
+        st.write(user_prompt)
 
     if st.session_state.messages[-1]["role"] != "assistant":
-        with st.chat_message("assistant"):#, avatar="./Snowflake_Logomark_blue.svg"):
+        with st.chat_message("assistant"):
             response_stream = generate_arctic_response()
             response = ''.join(response_stream)
             avatar(response)
             st.write(response)
         st.session_state.messages.append({"role": "assistant", "content": response})
-
 
