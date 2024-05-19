@@ -197,10 +197,10 @@ def generate_arctic_response():
     response = ""
     for event in replicate.stream("snowflake/snowflake-arctic-instruct",
                                   input={"prompt": prompt_str,
-                                         "prompt_template": r"{prompt}",
+                                         "prompt_template": r"Be brief in the following request, {prompt}",
                                          "temperature": temperature,
                                          "top_p": top_p,
-                                         "max_new_tokens": 100,
+                                         "max_new_tokens": 50,
                                          }):
         response += str(event)
         yield str(event)
