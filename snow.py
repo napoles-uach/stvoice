@@ -72,14 +72,13 @@ def generate_arctic_response():
         st.button('Clear chat history', on_click=clear_chat_history, key="clear_chat_history")
         st.stop()
 
-    responses = []
     for event in replicate.stream("snowflake/snowflake-arctic-instruct",
-                                  input={"prompt": prompt_str,
-                                         "prompt_template": r"{prompt}",
-                                         "temperature": temperature,
-                                         "top_p": top_p}):
-        responses.append(str(event))
-    return ' '.join(responses)
+                           input={"prompt": prompt_str,
+                                  "prompt_template": r"{prompt}",
+                                  "temperature": temperature,
+                                  "top_p": top_p,
+                                  }):
+        yield str(event)
 
 # User-provided prompt via chat input or voice
 st.header("Chat with Snowflake Arctic")
@@ -96,8 +95,10 @@ if prompt:
 
     if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):#, avatar="./Snowflake_Logomark_blue.svg"):
-            response = generate_arctic_response()
+            response_stream = generate_arctic_response()
+            response = ''.join(response_stream)
             avatar(response)
             st.write(response)
         st.session_state.messages.append({"role": "assistant", "content": response})
+
 
