@@ -207,6 +207,25 @@ def generate_arctic_response():
     return response
 
 # User-provided prompt via chat input or voice
+#st.header("Chat with Snowflake Arctic")
+#text_prompt = st.chat_input(disabled=not replicate_api, key="text_input")
+
+#if text_prompt or st.session_state.get("voice_prompt"):
+#    user_prompt = text_prompt if text_prompt else st.session_state.pop("voice_prompt", "")
+        
+#    st.session_state.messages.append({"role": "user", "content": user_prompt})
+#    with st.chat_message("user", avatar="⛷️"):
+#        st.write(user_prompt)
+
+#    if st.session_state.messages[-1]["role"] != "assistant":
+#        with st.chat_message("assistant"):
+#            response_stream = generate_arctic_response()
+#            full_response = ''.join(response_stream)
+#            avatar(full_response)
+#            st.write(full_response)
+#        st.session_state.messages.append({"role": "assistant", "content": full_response})
+
+# User-provided prompt via chat input or voice
 st.header("Chat with Snowflake Arctic")
 text_prompt = st.chat_input(disabled=not replicate_api, key="text_input")
 
@@ -214,14 +233,9 @@ if text_prompt or st.session_state.get("voice_prompt"):
     user_prompt = text_prompt if text_prompt else st.session_state.pop("voice_prompt", "")
         
     st.session_state.messages.append({"role": "user", "content": user_prompt})
-    with st.chat_message("user", avatar="⛷️"):
-        st.write(user_prompt)
 
     if st.session_state.messages[-1]["role"] != "assistant":
-        with st.chat_message("assistant"):
-            response_stream = generate_arctic_response()
-            full_response = ''.join(response_stream)
-            avatar(full_response)
-            st.write(full_response)
+        response_stream = generate_arctic_response()
+        full_response = ''.join(response_stream)
+        avatar(full_response)
         st.session_state.messages.append({"role": "assistant", "content": full_response})
-
