@@ -200,6 +200,7 @@ def generate_arctic_response():
                                          "prompt_template": r"{prompt}",
                                          "temperature": temperature,
                                          "top_p": top_p,
+                                         "max_new_tokens"=100,
                                          }):
         response += str(event)
         yield str(event)
