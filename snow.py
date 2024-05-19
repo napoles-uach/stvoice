@@ -41,7 +41,7 @@ def avatar(text='', lang='en-US'):
                     height: 300px;
                     background-size: cover;
                     background-image: url('https://raw.githubusercontent.com/napoles-uach/streamlit_avatar/main/artic_1.png'); /* Imagen de fondo predeterminada */
-                    animation: waitingAnimation 2s steps(2, end) infinite;
+                    animation: waitingAnimation 1s steps(2, end) infinite; /* Duración ajustada */
                     z-index: 1;
                 }}
                 @keyframes waitingAnimation {{
@@ -84,11 +84,11 @@ def avatar(text='', lang='en-US'):
                     var utterance = new SpeechSynthesisUtterance(texto);
                     utterance.lang = "{lang}"; // Configurar el idioma deseado
                     utterance.onstart = function(event) {{
-                        var duration = Math.min(utterance.text.length / 10, 5);  // Duración de la animación basada en la longitud del texto
+                        var duration = Math.min(utterance.text.length / 20, 5);  // Duración de la animación más rápida
                         setAnimation('speakAnimation', duration, 10);
                     }};
                     utterance.onend = function(event) {{
-                        setTimeout(() => {{ setAnimation('waitingAnimation', 2, 2); }}, 500);
+                        setTimeout(() => {{ setAnimation('waitingAnimation', 1, 2); }}, 500);  // Transición más rápida a la animación de espera
                     }};
                     speechSynthesis.speak(utterance);
 
