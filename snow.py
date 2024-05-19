@@ -84,7 +84,7 @@ def avatar(text='', lang='en-US'):
                     var utterance = new SpeechSynthesisUtterance(texto);
                     utterance.lang = "{lang}"; // Configurar el idioma deseado
                     utterance.onstart = function(event) {{
-                        var duration = Math.max(texto.length / 15, 2);  // Duración basada en la longitud del texto
+                        var duration = Math.max(texto.length / 10, 2);  // Duración basada en la longitud del texto
                         setAnimation('speakAnimation', duration, 10);
                     }};
                     utterance.onend = function(event) {{
