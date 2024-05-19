@@ -2,6 +2,7 @@ import streamlit as st
 import replicate
 import os
 from transformers import AutoTokenizer
+from streamlit_avatar import avatar
 
 # Set assistant icon to Snowflake logo
 icons = {"assistant": "./Snowflake_Logomark_blue.svg", "user": "⛷️"}
@@ -11,7 +12,7 @@ st.set_page_config(page_title="Snowflake Arctic")
 
 # Replicate Credentials
 with st.sidebar:
-    st.title('Snowflake Arctic')
+    #st.title('Snowflake Arctic')
     if 'REPLICATE_API_TOKEN' in st.secrets:
         replicate_api = st.secrets['REPLICATE_API_TOKEN']
     else:
@@ -33,6 +34,7 @@ if "messages" not in st.session_state.keys():
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):#, avatar=icons[message["role"]]):
         st.write(message["content"])
+        avatar(message["content"])
 
 def clear_chat_history():
     st.session_state.messages = [{"role": "assistant", "content": "Hi. I'm Arctic, a new, efficient, intelligent, and truly open language model created by Snowflake AI Research. Ask me anything."}]
