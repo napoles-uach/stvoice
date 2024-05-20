@@ -128,7 +128,7 @@ def avatar(text='', lang='en-US'):
         """
 
         # Renderizar el HTML en Streamlit
-        components.html(html_str, height=900)
+        components.html(html_str, height=600)
     except Exception as e:
         st.error(f"An error occurred: {e}")
 
