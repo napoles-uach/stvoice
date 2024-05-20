@@ -146,8 +146,9 @@ with st.sidebar:
 
     os.environ['REPLICATE_API_TOKEN'] = replicate_api
     st.subheader("Adjust model parameters")
-    temperature = st.slider('temperature', min_value=0.01, max_value=5.0, value=0.3, step=0.01)
-    top_p = st.slider('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
+    with st.expander('Model Parameters'):
+        temperature = st.slider('temperature', min_value=0.01, max_value=5.0, value=0.3, step=0.01)
+        top_p = st.slider('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
     
     st.subheader("Voice Input")
     #mic = mic_recorder(key="mic_input")
