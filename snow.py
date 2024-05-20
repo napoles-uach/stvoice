@@ -10,10 +10,6 @@ st.set_page_config(
     page_icon="❄️",
     layout="wide",
     initial_sidebar_state="expanded",
-    menu_items={
-        'Get Help': 'https://www.extremelycoolapp.com/help',
-        'Report a bug': "https://www.extremelycoolapp.com/bug",
-        'About': "# This is a header. This is an *extremely* cool app!"
     }
 )
 # Avatar animation function
@@ -140,7 +136,7 @@ icons = {"assistant": "./Snowflake_Logomark_blue.svg", "user": "⛷️"}
 
 # Replicate Credentials
 with st.sidebar:
-    st.title('Snowflake Arctic')
+    st.title('Arctic Avatar with voice')
     if 'REPLICATE_API_TOKEN' in st.secrets:
         replicate_api = st.secrets['REPLICATE_API_TOKEN']
     else:
