@@ -239,7 +239,7 @@ def generate_arctic_response():
 # User-provided prompt via chat input or voice
 #st.header("Chat with Snowflake Arctic")
 text_prompt = st.chat_input(disabled=not replicate_api, key="text_input")
-
+avatar()
 if text_prompt or st.session_state.get("voice_prompt"):
     user_prompt = text_prompt if text_prompt else st.session_state.pop("voice_prompt", "")
         
