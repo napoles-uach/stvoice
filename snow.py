@@ -63,7 +63,7 @@ def avatar(text='', lang='en-US'):
                 }}
                 .snowflake {{
                     position: absolute;
-                    top: -10px;
+                    top: -1px;
                     width: 10px;
                     height: 10px;
                     background: white;
