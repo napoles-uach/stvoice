@@ -135,7 +135,7 @@ icons = {"assistant": "./Snowflake_Logomark_blue.svg", "user": "⛷️"}
 
 # Replicate Credentials
 with st.sidebar:
-    st.title('Arctic Avatar with voice')
+    st.title('Arctic avatar with voice 🗣️')
     if 'REPLICATE_API_TOKEN' in st.secrets:
         replicate_api = st.secrets['REPLICATE_API_TOKEN']
     else:
