@@ -154,11 +154,11 @@ with st.sidebar:
     temperature = st.slider('temperature', min_value=0.01, max_value=5.0, value=0.3, step=0.01)
     top_p = st.slider('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
     
-    st.subheader("Voice Input")
-    mic = mic_recorder(key="mic_input")
-    voice_prompt = speech_to_text(language='en', use_container_width=True, just_once=True, key='STT')
-    if voice_prompt:
-        st.session_state.voice_prompt = voice_prompt
+st.subheader("Voice Input")
+mic = mic_recorder(key="mic_input")
+voice_prompt = speech_to_text(language='en', use_container_width=True, just_once=True, key='STT')
+if voice_prompt:
+    st.session_state.voice_prompt = voice_prompt
 
 # Store LLM-generated responses
 if "messages" not in st.session_state.keys():
