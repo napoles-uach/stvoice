@@ -37,8 +37,8 @@ def avatar(text='', lang='en-US'):
                     overflow: hidden;
                 }}
                 .avatar {{
-                    width: 900px;
-                    height: 900px;
+                    width: 800px;
+                    height: 800px;
                     background-size: cover;
                     background-image: url('https://raw.githubusercontent.com/napoles-uach/streamlit_avatar/main/artic_1.png'); /* Imagen de fondo predeterminada */
                     animation: waitingAnimation 3s steps(2, end) infinite; /* Duración ajustada */
