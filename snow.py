@@ -37,8 +37,8 @@ def avatar(text='', lang='en-US'):
                     overflow: hidden;
                 }}
                 .avatar {{
-                    width: 300px;
-                    height: 300px;
+                    width: 900px;
+                    height: 900px;
                     background-size: cover;
                     background-image: url('https://raw.githubusercontent.com/napoles-uach/streamlit_avatar/main/artic_1.png'); /* Imagen de fondo predeterminada */
                     animation: waitingAnimation 3s steps(2, end) infinite; /* Duración ajustada */
@@ -117,7 +117,7 @@ def avatar(text='', lang='en-US'):
         """
 
         # Renderizar el HTML en Streamlit
-        components.html(html_str, height=600)
+        components.html(html_str, height=900)
     except Exception as e:
         st.error(f"An error occurred: {e}")
 
